@@ -160,9 +160,11 @@ class HomeController extends Controller
 
         // Проверка на последний пост
         $prev_time = Carbon::make(Ticket::where('user', \Auth::id())->max('created_at'));
-        if (Carbon::now()->timestamp - $prev_time->timestamp < 86400) {
-            \Session::flash('error', 'Вы не можете создать более одного обращения в сутки');
-            return false;
+        if ($prev_time) {
+            if (Carbon::now()->timestamp - $prev_time->timestamp < 86400) {
+                \Session::flash('error', 'Вы не можете создать более одного обращения в сутки');
+                return false;
+            }
         }
 
         return true;
