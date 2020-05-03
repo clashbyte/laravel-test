@@ -17,9 +17,27 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/home/new', 'HomeController@newTicket');
-Route::post('/home/new', 'HomeController@saveTicket');
-Route::get('/home/reply/{id}', 'HomeController@newReply');
-Route::post('/home/reply/{id}', 'HomeController@saveReply');
-Route::get('/home/file/{id}', 'HomeController@getFile');
+
+
+Route::middleware('auth')->group(function () {
+
+    // Общие маршруты
+    Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/home/file/{ticketID}', 'HomeController@getFile')->where('ticketID', '[0-9]+');
+
+    // Маршруты клиента
+    Route::middleware(\App\Http\Middleware\ClientAccess::class)->prefix('/home')->group(function () {
+        Route::get('/new', 'ClientController@ticketForm');
+        Route::post('/new', 'ClientController@saveTicket');
+    });
+
+    // Маршруты менеджера
+    Route::middleware(\App\Http\Middleware\ManagerAccess::class)->prefix('/home')->group(function () {
+        Route::get('/reply/{ticketID}', 'ManagerController@replyForm')->where('ticketID', '[0-9]+');
+        Route::post('/reply', 'ManagerController@saveReply');
+    });
+});
+
+
+
+

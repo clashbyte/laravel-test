@@ -22,8 +22,9 @@
                 </div>
             </div>
 
-            <form method="POST" action="/home/reply/{{ $ticket->id }}">
+            <form method="POST" action="/home/reply">
                 @csrf
+                <input type="hidden" name="ticket" value="{{ $ticket->id }}">
                 <div class="card">
                     <div class="card-header">Ответ на заявку</div>
                     <div class="card-body">

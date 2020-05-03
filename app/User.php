@@ -46,4 +46,21 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Проверка на обычного пользователя
+     * @return bool
+     */
+    public function isUser() : bool {
+        return $this->role == self::ROLE_USER;
+    }
+
+    /**
+     * Проверка на менеджера
+     * @return bool
+     */
+    public function isManager() : bool {
+        return $this->role == self::ROLE_MANAGER;
+    }
+
 }
